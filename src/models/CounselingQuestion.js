@@ -2,44 +2,39 @@ import {Sequelize} from 'sequelize';
 const {Model, DataTypes} = Sequelize;
 
 export default (sequelize) => {
-  class CounselingQuestion extends Model {
-    static associate(models) {
-      this.belongsTo(models.User, {
-        foreignKey: 'userId',
-        as: 'User',
-      });
-
-    //   this.belongsTo(models.Category, {
-    //       foreignKey: 'categoryId',
-    //       as: 'Category',
-    //   });
-
-    //   this.belongsTo(models.Emotion, {
-    //       foreignKey: "emotionId",
-    //       as: "Emotion",
-    //   })
+    class CounselingQuestion extends Model {
+      static associate(model) {
+        this.belongsTo(model.User, { foreignKey: "userId", targetKey: "id" })
+        this.belongsTo(model.Category, { foreignKey: "categoryId ", targetKey: "id" })
+        this.belongsTo(model.Emotion, { foreignKey: "emotionId ", targetKey: "id" })
+        this.hasMany(model.CounselingComment, { foreignKey: "counselingQuestionId ", sourceKey: "id" })
+      }
     }
-  }
 
-  CounselingQuestion.init({
-    id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    name: {
-      type: DataTypes.STRING(20),
-      allowNull: false,
-      unique: true,
-    }
-  }, {
-    sequelize,
-    tableName: 'users',
-    charset: 'utf8',
-    timestamps: true,
-    underscored: true,
-  });
+    CounselingQuestion.init({
+        id: {
+          type: Sequelize.BIGINT,
+          primaryKey: true,
+          allowNull: false,
+          unique: true,
+        },
+        title: {
+          type: Sequelize.STRING(20),
+          allowNull: false,
+        },
+        content: {
+          type: Sequelize.STRING(200),
+          allowNull: false,
+        },
+      },
+      {
+        sequelize,
+        tableName: 'users',
+        charset: 'utf8',
+        timestamps: true,
+        underscored: true,
+      },
+      );
 
   return CounselingQuestion;
-};
+}
